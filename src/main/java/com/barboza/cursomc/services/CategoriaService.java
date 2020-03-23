@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.barboza.cursomc.domain.Categoria;
 import com.barboza.cursomc.repositories.CategoriaRepository;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+
 @Service
 public class CategoriaService {
 	
@@ -19,8 +21,9 @@ public class CategoriaService {
 	//instanciada automaticamente pelo o SPRING, através do @Autowired
 	@Autowired 
 	private CategoriaRepository repo; /* Abreviação de Repository */
-	public Categoria buscar(Integer id) {
+	public Categoria buscar(Integer id) throws ObjectNotFoundException {
 		Optional<Categoria> obj = repo.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 	}
 }

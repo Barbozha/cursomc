@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.barboza.cursomc.domain.Categoria;
 import com.barboza.cursomc.services.CategoriaService;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+
 // anotação 
 // Vamos importar esta anotação digitando crtl + shift + o
 //ou 
@@ -28,8 +30,9 @@ public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService service;
+	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<?> find(@PathVariable Integer id) throws ObjectNotFoundException {
 	Categoria obj = service.buscar(id);
 	return ResponseEntity.ok(obj);
 		
