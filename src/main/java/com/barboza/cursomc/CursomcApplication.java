@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.barboza.cursomc.domain.Categoria;
+import com.barboza.cursomc.domain.Cidade;
+import com.barboza.cursomc.domain.Estado;
 import com.barboza.cursomc.domain.Produto;
 import com.barboza.cursomc.repositories.CategoriaRepository;
+import com.barboza.cursomc.repositories.CidadeRepository;
+import com.barboza.cursomc.repositories.EstadoRepository;
 import com.barboza.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -22,6 +26,12 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private EstadoRepository estadoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -55,6 +65,34 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		//Salvando os produtos no repository
 		produtoRepository.saveAll(Arrays.asList(prod01, prod02, prod03));
+		
+		
+		//Incluindo dados para Estado e Cidade
+		//Realizando as instancias das cidades para Estados
+		Estado est01 = new Estado(null, "SP");
+		Estado est02 = new Estado(null, "MG");
+		Estado est03 = new Estado(null, "RJ");
+		
+		Cidade cid01 = new Cidade(null,"São Paulo", est01);
+		Cidade cid02 = new Cidade(null, "Extrema", est02);
+		Cidade cid03 = new Cidade(null, "Campinas", est01);
+		Cidade cid04 = new Cidade(null, "Rio de Janeiro", est03);
+		
+		//Instanciando Estado para cidade
+		est01.getCidade().addAll(Arrays.asList(cid01,cid03));
+		est02.getCidade().addAll(Arrays.asList(cid02));
+		est03.getCidade().addAll(Arrays.asList(cid04));
+		
+		//Salvando as categorias de Cidade no Ropository
+		//Na regra de negócio (dominio) deve-se salvar primeiro o estado
+		//para depois salvar as cidades dentro do estado
+		estadoRepository.saveAll(Arrays.asList(est01,est02,est03));
+		
+		//Salvando as cidades dentro do estado
+		cidadeRepository.saveAll(Arrays.asList(cid01,cid02,cid03,cid04));
+		
+		
+		
 	}
 
 }
