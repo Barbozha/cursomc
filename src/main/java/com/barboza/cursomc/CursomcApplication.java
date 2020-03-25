@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.barboza.cursomc.domain.Categoria;
 import com.barboza.cursomc.domain.Cidade;
+import com.barboza.cursomc.domain.Cliente;
+import com.barboza.cursomc.domain.Endereco;
 import com.barboza.cursomc.domain.Estado;
 import com.barboza.cursomc.domain.Produto;
+import com.barboza.cursomc.domain.enums.TipoCliente;
 import com.barboza.cursomc.repositories.CategoriaRepository;
 import com.barboza.cursomc.repositories.CidadeRepository;
+import com.barboza.cursomc.repositories.ClienteRepository;
+import com.barboza.cursomc.repositories.EnderecoRepository;
 import com.barboza.cursomc.repositories.EstadoRepository;
 import com.barboza.cursomc.repositories.ProdutoRepository;
 
@@ -32,6 +37,12 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private EstadoRepository estadoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -92,7 +103,28 @@ public class CursomcApplication implements CommandLineRunner{
 		cidadeRepository.saveAll(Arrays.asList(cid01,cid02,cid03,cid04));
 		
 		
+		//Pela ordem precisamos instanciar o cliente primeiro, conforme o nosso caso de dominio
+		//Em seguida instanciar o telefone e depois instanciar o endereço
+		Cliente cli01 = new Cliente(null,"Jorge Paulo Barboza de Sousa", "barbozha@gmail.com","06436138897", TipoCliente.PESSOAFISICA);
+		cli01.getTelefones().addAll(Arrays.asList("11983232866","1133688748"));
+		Cliente cli02 = new Cliente(null, "Angélica Migliori dos Santos de Sousa", "amigliori@gmail.com", "0865438766", TipoCliente.PESSOAFISICA);
+		cli02.getTelefones().addAll(Arrays.asList("1195454344","1133688748"));
 		
+		//Instanciando o endereço do cliente
+		Endereco end01 = new Endereco(null,"Rua A","500","Casa 07","Vila Taquari","08230010",cli01,cid01);
+		Endereco end02 = new Endereco(null, "Rua Rural", "300", "Zona Rural", "Pessegueiros", "03223232", cli02, cid02);
+		
+		//Fazer o cliente conhecer o endereço dele
+		cli01.getEnderecos().addAll(Arrays.asList(end01));
+		cli02.getEnderecos().addAll(Arrays.asList(end02));
+		
+		//Salvando Cliente
+		clienteRepository.saveAll(Arrays.asList(cli01));
+		enderecoRepository.saveAll(Arrays.asList(end01));
+		
+		//Salvando Endereco
+		clienteRepository.saveAll(Arrays.asList(cli02));
+		enderecoRepository.saveAll(Arrays.asList(end02));
 	}
 
 }
