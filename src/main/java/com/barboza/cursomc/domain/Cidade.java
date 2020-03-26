@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Cidade implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -20,6 +22,8 @@ public class Cidade implements Serializable{
 	
 	//No domínio na entidade Cidade para Estado é Muitos para Um ( muitas cidades dentro de um Estado )
 	//Usamos a anotação ManyToOne do Spring Boot)
+	
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name="estado_id")//é a chave estrangeira na base de dados cidades
 	private Estado estado;

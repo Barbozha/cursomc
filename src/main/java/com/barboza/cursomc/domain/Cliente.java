@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.barboza.cursomc.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Cliente  implements Serializable{
@@ -29,7 +30,7 @@ public class Cliente  implements Serializable{
 	private String cpfoucnpj;
 	private Integer tipo; // É um numero inteiro será exposto para o sistema o dado tipo cliente(Enum)
 	
-	
+	@JsonManagedReference
 	@OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	
