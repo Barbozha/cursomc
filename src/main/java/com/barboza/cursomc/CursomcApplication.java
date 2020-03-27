@@ -13,6 +13,7 @@ import com.barboza.cursomc.domain.Cidade;
 import com.barboza.cursomc.domain.Cliente;
 import com.barboza.cursomc.domain.Endereco;
 import com.barboza.cursomc.domain.Estado;
+import com.barboza.cursomc.domain.ItemPedido;
 import com.barboza.cursomc.domain.Pagamento;
 import com.barboza.cursomc.domain.PagamentoComBoleto;
 import com.barboza.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.barboza.cursomc.repositories.CidadeRepository;
 import com.barboza.cursomc.repositories.ClienteRepository;
 import com.barboza.cursomc.repositories.EnderecoRepository;
 import com.barboza.cursomc.repositories.EstadoRepository;
+import com.barboza.cursomc.repositories.ItemPedidoRepository;
 import com.barboza.cursomc.repositories.PagamentoRepository;
 import com.barboza.cursomc.repositories.PedidoRepository;
 import com.barboza.cursomc.repositories.ProdutoRepository;
@@ -57,6 +59,9 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository ItemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -190,6 +195,24 @@ public class CursomcApplication implements CommandLineRunner{
 						
 		//Salvo agora os pagamentos
 		pagamentoRepository.saveAll(Arrays.asList(pagto03,pagto04));
+		
+		//Inserindo dados do ItemPedido conforme a UML 
+		ItemPedido ite01 = new ItemPedido(ped01, prod01, 0.00, 1, 2500.00);
+		ItemPedido ite02 = new ItemPedido(ped01, prod02, 0.00, 1, 90.00);
+		ItemPedido ite03 = new ItemPedido(ped02, prod03, 0.10, 1, 2700.00);
+		
+		//Inserindo e associando os pedidos com os seus produtos
+		ped01.getItens().addAll(Arrays.asList(ite01,ite02));
+		ped02.getItens().addAll(Arrays.asList(ite03));
+		
+		//Agora faremos com que cada produto conheça os seus itens de produtos
+		prod01.getItens().addAll(Arrays.asList(ite01));
+		prod02.getItens().addAll(Arrays.asList(ite02));
+		prod03.getItens().addAll(Arrays.asList(ite03));
+		
+		//Salvando na base de dados o Repository dos item de pedido, Pedidos e os Produtos
+		ItemPedidoRepository.saveAll(Arrays.asList(ite01,ite02,ite03));
+		
 	
 	}
 
