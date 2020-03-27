@@ -34,13 +34,16 @@ public class Cliente  implements Serializable{
 	@OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	
-	
-	
 	@ElementCollection
 	@CollectionTable(name="TELEFONE") //Para a tabela de telefone
 	//O dominio Telefone é uma entidade fraca então irei implementar na própria classe Cliente
 	//Através de uma colecao
 	private Set<String> telefones = new HashSet<>();// É um conjunto de strings que não permite dados repetitivos
+	
+	//A classe cliente deve conhecer a clase pedido devido a UML
+	@OneToMany(mappedBy = "cliente") //foi mapeado pelo atributo cliente da classe pedido
+	private List<Pedido> pedidos = new ArrayList<>();
+	
 	
 	public Cliente () {
 		
@@ -127,7 +130,15 @@ public class Cliente  implements Serializable{
 		this.telefones = telefones;
 	}
 
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
 
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -153,8 +164,4 @@ public class Cliente  implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
-	
 }

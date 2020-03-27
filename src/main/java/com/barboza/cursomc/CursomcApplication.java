@@ -1,5 +1,6 @@
 package com.barboza.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.barboza.cursomc.domain.Cidade;
 import com.barboza.cursomc.domain.Cliente;
 import com.barboza.cursomc.domain.Endereco;
 import com.barboza.cursomc.domain.Estado;
+import com.barboza.cursomc.domain.Pagamento;
+import com.barboza.cursomc.domain.PagamentoComBoleto;
+import com.barboza.cursomc.domain.PagamentoComCartao;
+import com.barboza.cursomc.domain.Pedido;
 import com.barboza.cursomc.domain.Produto;
+import com.barboza.cursomc.domain.enums.EstadoPagamento;
 import com.barboza.cursomc.domain.enums.TipoCliente;
 import com.barboza.cursomc.repositories.CategoriaRepository;
 import com.barboza.cursomc.repositories.CidadeRepository;
 import com.barboza.cursomc.repositories.ClienteRepository;
 import com.barboza.cursomc.repositories.EnderecoRepository;
 import com.barboza.cursomc.repositories.EstadoRepository;
+import com.barboza.cursomc.repositories.PagamentoRepository;
+import com.barboza.cursomc.repositories.PedidoRepository;
 import com.barboza.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -43,6 +51,12 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -125,6 +139,58 @@ public class CursomcApplication implements CommandLineRunner{
 		//Salvando Endereco
 		clienteRepository.saveAll(Arrays.asList(cli02));
 		enderecoRepository.saveAll(Arrays.asList(end02));
+		
+		//Instanciando a data para pegar um formato válido para o nossa classe Pedido do domínio
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		//Gerando os pedidos dos clientes
+		Pedido ped01 = new Pedido(null, sdf.parse("12/02/2020 13:00"), cli01, end01);
+		Pedido ped02 = new Pedido(null, sdf.parse("15/03/2020 16:32"), cli01, end01);
+		
+		//Associar os clientes com os pedidos deles conforme a UML
+		cli01.getPedidos().addAll(Arrays.asList(ped01,ped02));
+		
+		//Realizando a forma de pagamento dos produtos adquiridos
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped01, 6);
+		ped01.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped02, sdf.parse("15/03/2020 00:00"),null);
+		ped02.setPagamento(pagto2);
+		
+		
+		
+		
+		//Pedidos do cliente cli02
+		
+		//Instanciando a data para pegar um formato válido para o nossa classe Pedido do domínio
+		
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		//Gerando os pedidos dos clientes
+		Pedido ped03 = new Pedido(null, sdf1.parse("01/02/2020 15:00"), cli02, end02);
+		Pedido ped04 = new Pedido(null, sdf1.parse("02/03/2020 10:12"), cli02, end02);
+		
+		//Associar os clientes com os pedidos deles conforme a UML
+		cli02.getPedidos().addAll(Arrays.asList(ped03,ped04));
+		
+		//Realizando a forma de pagamento dos produtos adquiridos
+		Pagamento pagto03 = new PagamentoComCartao(null, EstadoPagamento.PENDENTE, ped03, 10);
+		ped03.setPagamento(pagto03);
+		
+		Pagamento pagto04 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped04, sdf.parse("05/03/2020 00:00"), null);
+		ped04.setPagamento(pagto04);
+				
+				
+		//Salvo primeiro o pedido Cliente 01
+		pedidoRepository.saveAll(Arrays.asList(ped01,ped02));
+				
+		//Salvo agora os pagamentos
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+		
+		//Salvo primeiro o pedido Cliente 02
+		pedidoRepository.saveAll(Arrays.asList(ped03,ped04));
+						
+		//Salvo agora os pagamentos
+		pagamentoRepository.saveAll(Arrays.asList(pagto03,pagto04));
+	
 	}
 
 }
