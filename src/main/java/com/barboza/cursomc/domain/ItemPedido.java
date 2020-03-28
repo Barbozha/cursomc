@@ -5,11 +5,14 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class ItemPedido implements Serializable{
 	//Serializable (padrão: 1L)
 	private static final long serialVersionUID = 1L;
 	
+	@JsonIgnore //Ignoro esta chave dupla para a serialização
 	@EmbeddedId //é um id imbutino no auxiliar
 	private ItemPedidoPK id = new ItemPedidoPK();//O id é um atributo composto, como se fosse um atributo primitivo
 	//Quando vc faz uma entidade JPA tendo como atributo a classe ItemPedidoPK temos que implementar a classe ItemPedidoPK
@@ -31,12 +34,15 @@ public class ItemPedido implements Serializable{
 		this.preco = preco;
 	}
 	
-	
+	//Temos que ignorar a referência cíclica antes de usar o getPedido
+	@JsonIgnore
 	//Para eu ter acesso ao produto fora da minha classe itemPedido
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
 	
+	//Temos que ignorar tambem a referência cíclica antes de usar o getProduto
+	//@JsonIgnore
 	public Produto getProduto() {
 		return id.getProduto();
 	}

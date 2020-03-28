@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // A classe produto é uma entidade de dominio JPA 
 // (escolhendo a INTERFACE do javax.persistence)
@@ -52,6 +53,7 @@ public class Produto implements Serializable{
 	//No domínio tem que ser muitos para muitos
 	private List<Categoria> categorias = new ArrayList<>();
 	
+	@JsonIgnore //Igonoro para a serialização entre ItemPedido e Produto
 	@OneToMany(mappedBy = "id.produto")
 	//Digo que os produtos conhece os item associados a ele
 	//para classe ItemPedidoPK
@@ -62,6 +64,10 @@ public class Produto implements Serializable{
 		
 	}
 	
+	
+	//Irei ignorar a função da lista de pedidos associados ao produtos, ai irei ter uma referença síclica NÃO É BOM ISSO
+	//Tudo que é começado com get será serializado, PRECISAMOS EVITAR ISSO
+	@JsonIgnore
 	//Irei percorrer a lista de itens da minha classe
 	public List<Pedido> getPedidos(){
 		List<Pedido> lista = new ArrayList<>();

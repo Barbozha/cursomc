@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.barboza.cursomc.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -40,6 +41,8 @@ public class Cliente  implements Serializable{
 	//Através de uma colecao
 	private Set<String> telefones = new HashSet<>();// É um conjunto de strings que não permite dados repetitivos
 	
+	
+	@JsonBackReference //Os pedidos dos clientes não serão serializados
 	//A classe cliente deve conhecer a clase pedido devido a UML
 	@OneToMany(mappedBy = "cliente") //foi mapeado pelo atributo cliente da classe pedido
 	private List<Pedido> pedidos = new ArrayList<>();
