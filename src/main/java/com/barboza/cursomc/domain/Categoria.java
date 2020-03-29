@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 
 @Entity
 public class Categoria implements Serializable{
@@ -24,7 +22,7 @@ public class Categoria implements Serializable{
 	private String nome;
 	
 	//É uma referência gerenciada pelo Json
-	@JsonManagedReference
+	//@JsonManagedReference
 	
 	//Faço o mapeamento das tabelas muitos p muitos
 	@ManyToMany(mappedBy="categorias")//esta palavra "categoria" pertence ao nome da lista que está na classe Produto

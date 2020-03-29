@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 //Mapeamento 1 para 1
 
@@ -34,12 +33,12 @@ public class Pedido implements Serializable{
 	
 	
 	//Permito que a classe pagamento seja serializado conforme o domínio
-	@JsonManagedReference
+	//@JsonManagedReference
 	//No atributo pagamento tenho que por esta anotação para fazer 1 para 1 com o atributo da classe Pagamento
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")//é necessario por o cascade por não gerar um erro de entidade transiente o pedido e o pagamento dele é uma peculiariedade do JPA
 	private Pagamento pagamento;
 	
-	@JsonManagedReference
+	//@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;

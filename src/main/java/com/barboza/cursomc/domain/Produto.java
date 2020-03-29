@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // A classe produto é uma entidade de dominio JPA 
@@ -36,7 +35,7 @@ public class Produto implements Serializable{
 	// Esta anotação diz que do outro lado da associação já foram buscados os objetos e não precisa
 	// buscar mais onde será omitido a lista de categorias para cada produto. 
 	// Por isso eu uso o JsonBackReference
-	@JsonBackReference
+	@JsonIgnore
 	
 	// NO JPA, quando eu tenho no meu domínio muitos para muitos preciso configurar no meu
 	// código também para que dê certo nas minhas tabelas, no banco de dados.
